@@ -1,0 +1,23 @@
+add r1, r2, r3
+addi r4, r5, 10
+sub r6, r7, r8
+subi r9, r10, 5
+mul r11, r12, r13
+div r14, r15, r16
+not r17, r18
+or r19, r20, r21
+and r22, r23, r24
+blti r25, r26, 30
+bgti r27, r28, 40
+beqi r29, r30, 50
+blt r31, r32, r33
+bgt r34, r35, r36
+beq r37, r38, 60
+jr r39
+jof r40
+jal 100
+ret
+lw r41, 20(r42)
+sw r43, 30(r44)
+mov r45, r46
+movi r47, 70
