@@ -4,11 +4,6 @@ class Simulador:
     def __init__(self):
         pass
 
-    #Função para ler as intruções do arquivo de operações
-    def ler_operacao(self):
-        op_file = open('file_name', 'r')
-        linha = op_file.readline()
-        #Retorna uma lista 
-        return linha.split(' ')[-1]
-    
+    #add rd, rs, rt -> Atribui à rd a soma de rs e rt 
+    #rd ← rs+rt
     
