@@ -1,7 +1,6 @@
 '''
-Date : 07/08/24
-By : @thiagocalvi
-Nota : A principio o codigo do registrador eh isso 
+by: @thiagocalvi
+A principio o codigo do registrador eh isso 
 '''
 
 import struct

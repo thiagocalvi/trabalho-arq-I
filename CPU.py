@@ -9,12 +9,7 @@ class CPU:
         self.of = False #Overflow Flag
 
 
-
-    #Ler da memoria a instrução na posisão de pc
-    
-    #Decodificar a instrução tamanho de 64 bits (8 bytes)
-    #00000    00000     00000    00000   00000000000000000000000000000000000000000000    
-    #OPCODE   REG       REG      REG
+    #Aqui é onde mais temos coisas para fazer
 
     #Operações aritméticas
 
