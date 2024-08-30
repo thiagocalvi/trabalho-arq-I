@@ -73,3 +73,99 @@ class MemoriaCache:
             linha.valido = True
             offset = endereco % self.tamanho_bloco
             linha.dados[offset] = valor
+
+'''
+#LRU + Write-Through
+
+class LinhaCache:
+    def __init__(self, tamanho_bloco):
+        self.tag = None                  # Tag usada para identificar o bloco
+        self.dados = [0] * tamanho_bloco # Bloco de dados
+        self.valido = False              # Indica se a linha é valida
+
+class MemoriaCache:
+    def __init__(self, num_linhas, tamanho_bloco, memoria_principal):
+        self.num_linhas = num_linhas  # Quantidade de linhas da cache
+        self.tamanho_bloco = tamanho_bloco  # Quantidade de palavras por bloco
+        self.cache = [LinhaCache(tamanho_bloco) for _ in range(num_linhas)] # Inicializa a cache
+        self.acessos_recentemente = []  # Para gerenciar o uso das linhas para LRU
+        self.memoria_principal = memoria_principal  # Referência à memória principal
+
+    def calcular_indice(self, endereco):
+        return (endereco // self.tamanho_bloco) % self.num_linhas
+
+    def calcular_tag(self, endereco):
+        return endereco // (self.tamanho_bloco * self.num_linhas)
+
+    def atualizar_lru(self, indice):
+        if indice in self.acessos_recentemente:
+            self.acessos_recentemente.remove(indice)
+        self.acessos_recentemente.append(indice)
+
+    def ler(self, endereco):
+        indice = self.calcular_indice(endereco)
+        tag = self.calcular_tag(endereco)
+        linha = self.cache[indice]
+
+        if linha.valido and linha.tag == tag:
+            # Hit na cache
+            offset = endereco % self.tamanho_bloco
+            self.atualizar_lru(indice)
+            return linha.dados[offset]
+        else:
+            # Miss na cache, buscar da memória principal
+            bloco_base = endereco - (endereco % self.tamanho_bloco)
+            for i in range(self.tamanho_bloco):
+                linha.dados[i] = self.memoria_principal.ler(bloco_base + i)
+            linha.tag = tag
+            linha.valido = True
+            self.atualizar_lru(indice)
+            offset = endereco % self.tamanho_bloco
+            return linha.dados[offset]
+
+    def escrever(self, endereco, valor):
+        indice = self.calcular_indice(endereco)
+        tag = self.calcular_tag(endereco)
+        linha = self.cache[indice]
+
+        if linha.valido and linha.tag == tag:
+            # Hit na cache
+            offset = endereco % self.tamanho_bloco
+            linha.dados[offset] = valor
+        else:
+            # Miss na cache, carregar bloco da memória principal
+            if linha.valido:
+                # Substituição pela política LRU
+                lru_indice = self.acessos_recentemente.pop(0)  # Remove o menos recentemente usado
+                linha = self.cache[lru_indice]  # Substitui a linha
+                linha.tag = tag
+                linha.valido = True
+            else:
+                self.atualizar_lru(indice)  # Atualiza o LRU para a nova linha
+
+            bloco_base = endereco - (endereco % self.tamanho_bloco)
+            for i in range(self.tamanho_bloco):
+                linha.dados[i] = self.memoria_principal.ler(bloco_base + i)
+            linha.tag = tag
+            linha.valido = True
+            offset = endereco % self.tamanho_bloco
+            linha.dados[offset] = valor
+
+        # Write-Through: Escrever na memória principal também
+        self.memoria_principal.escrever(endereco, valor)
+        self.atualizar_lru(indice)  # Atualiza o LRU para a linha acessada/escrita
+
+class MemoriaPrincipal:
+    def __init__(self, tamanho):
+        self.memoria = [0] * tamanho  # Inicializa a memória com zeros
+
+    def ler(self, endereco):
+        if endereco < 0 or endereco >= len(self.memoria):
+            raise ValueError("Endereço fora do limite da memória")
+        return self.memoria[endereco]
+
+    def escrever(self, endereco, valor):
+        if endereco < 0 or endereco >= len(self.memoria):
+            raise ValueError("Endereço fora do limite da memória")
+        self.memoria[endereco] = valor
+'''
