@@ -74,7 +74,7 @@ class MemoriaCache:
             offset = endereco % self.tamanho_bloco
             linha.dados[offset] = valor
 
-'''
+
 #LRU + Write-Through
 
 class LinhaCache:
@@ -92,17 +92,32 @@ class MemoriaCache:
         self.memoria_principal = memoria_principal  # Referência à memória principal
 
     def calcular_indice(self, endereco):
+        #Recebe o endereço de memória e calcula qual linha será acessada
         return (endereco // self.tamanho_bloco) % self.num_linhas
 
     def calcular_tag(self, endereco):
+        '''
+        Calcula a tag associada a um bloco de memória
+        Tag serve para identificar se os dados armazenados em 
+        uma linha de cache pertencem ao bloco de memória correto
+        '''
         return endereco // (self.tamanho_bloco * self.num_linhas)
 
     def atualizar_lru(self, indice):
+        '''
+        Atualiza a lista de acessos recentes para a política LRU.
+        O índice da linha acessada é movido para o final da lista.
+        '''
         if indice in self.acessos_recentemente:
             self.acessos_recentemente.remove(indice)
         self.acessos_recentemente.append(indice)
 
     def ler(self, endereco):
+        '''
+        Acessar um dado armazenado em um endereço específico na memória. 
+        Verifica se o dado está presente na cache. Se o dado estiver na cache (hit), 
+        ele é retornado. Caso contrário (miss), nesse caso buscar os dados na memória principal
+        '''
         indice = self.calcular_indice(endereco)
         tag = self.calcular_tag(endereco)
         linha = self.cache[indice]
@@ -124,6 +139,11 @@ class MemoriaCache:
             return linha.dados[offset]
 
     def escrever(self, endereco, valor):
+        '''
+        Serve para inserir ou atualizar dados em um endereço específico na memória cache. 
+        Ela garante que o dado seja escrito na cache (e na memória principal, dependendo da política de escrita).
+        Uma sugestão de política de escrita é o Write-Through, sempre que um dado é atualizado na cache, ele também é imediatamente escrito na memória principal.
+        '''
         indice = self.calcular_indice(endereco)
         tag = self.calcular_tag(endereco)
         linha = self.cache[indice]
@@ -154,18 +174,3 @@ class MemoriaCache:
         # Write-Through: Escrever na memória principal também
         self.memoria_principal.escrever(endereco, valor)
         self.atualizar_lru(indice)  # Atualiza o LRU para a linha acessada/escrita
-
-class MemoriaPrincipal:
-    def __init__(self, tamanho):
-        self.memoria = [0] * tamanho  # Inicializa a memória com zeros
-
-    def ler(self, endereco):
-        if endereco < 0 or endereco >= len(self.memoria):
-            raise ValueError("Endereço fora do limite da memória")
-        return self.memoria[endereco]
-
-    def escrever(self, endereco, valor):
-        if endereco < 0 or endereco >= len(self.memoria):
-            raise ValueError("Endereço fora do limite da memória")
-        self.memoria[endereco] = valor
-'''
