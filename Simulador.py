@@ -49,5 +49,4 @@ class Simulador:
 simulador = Simulador("./.as/add_mov.as")
 
 simulador.carregar_programa()
-#simulador.cpu.memoria_principal.imprimir_memoria()
 simulador.iniciar_execucao()
