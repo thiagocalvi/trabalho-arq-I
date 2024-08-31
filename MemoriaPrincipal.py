@@ -1,32 +1,28 @@
-'''
-Essa uma implementação bem básica da memória principal
-contendo as funções basicas de uma memoria
-A memoria armazena uma instrução ou um inteiro de 64 bits (8 bytes)
-'''
-
 class MemoriaPrincipal:
     def __init__(self, tamanho):
-        #TO-DO: Rever o calculo do tamanho da memória
-        self.tamanho = tamanho
+        # O tamanho agora é calculado em bytes
+        # Cada posição armazena um dado de 64 bits (8 bytes)
+        self.tamanho = tamanho * 8  # Calcula o tamanho real da memória em bytes
         self.memoria = [0] * self.tamanho  # Inicializa a memória com zeros
 
     def ler(self, endereco):
-        #Recebe o endereço onde será realizada a leitura
+        # Recebe o endereço onde será realizada a leitura
         if endereco < 0 or endereco >= self.tamanho:
-            #Verifica se o endereço está dento do limite da memória
+            # Verifica se o endereço está dentro do limite da memória
             raise ValueError("Endereço fora do limite da memória")
-        #Retorna o dado armazena no endereço informado
+        # Retorna o dado armazenado no endereço informado
         return self.memoria[endereco]
 
     def escrever(self, endereco, valor):
-        #Recebe o endereço de memória e o valor a ser escrito nesse endereço  
+        # Recebe o endereço de memória e o valor a ser escrito nesse endereço  
         if endereco < 0 or endereco >= self.tamanho:
-            #Verifica se o endereço está dento do limite da memória
+            # Verifica se o endereço está dentro do limite da memória
             raise ValueError("Endereço fora do limite da memória")
-        #Escreve o valor no endereço informado
-        #O dado que era armazenado nesse endereço será sobrescrito
+        # Escreve o valor no endereço informado
+        # O dado que era armazenado nesse endereço será sobrescrito
         self.memoria[endereco] = valor
 
     def imprimir_memoria(self):
-        for x in self.memoria:
-            print(x)
+        print("Memória Principal:")
+        for i, valor in enumerate(self.memoria):
+            print(f"Endereço {i}: {valor}")

@@ -6,37 +6,38 @@ from CPU import CPU
 class Simulador:
     def __init__(self, arquivo_instrucao) -> None:
         self.arquivo_instrucao = open(arquivo_instrucao, 'r')
-        self.cpu = CPU(124)
+        self.cpu = CPU(1024)
         #Ainda tem mais coisa para colocar aqui!
 
         #Receber aqui tambem a configuração do tamanho de memória entre outra configurações que
         #devem ser feitas
 
-
-    '''
-    TO-DO: Fazer uma função para carregar o programa para memória
-    Todas as instruçãoes devem estar carregadas em memória, somente depois disso o programa é executado 
-    '''
-
-
     def carregar_programa(self):
         '''
         Carrega para memória as instruções do arquivo de instruções (.as)
         '''
+        endereco_atual = self.cpu.pc.get_valor()
         linha = self.ler_linha()
-        self.cpu.memoriaPrincipal.escrever(self.cpu.pc.get_valor(), linha)
-        while linha != None and linha != "":
-            self.cpu.pc.set_valor(self.cpu.pc.get_valor() + 1) 
-            self.cpu.memoriaPrincipal.escrever(self.cpu.pc.get_valor(), linha)
+
+        while linha is not None and linha != "":
+            # Converte a instrução para um formato de 64 bits se necessário
+            # Aqui assumimos que 'linha' já está no formato correto para armazenamento de 64 bits
+            self.cpu.memoria_principal.escrever(endereco_atual, linha)
+
+            # Incrementa o PC para a próxima posição
+            endereco_atual += 1  # Incremento por 1, já que estamos tratando 64 bits por posição
+
+            # Atualiza o PC na CPU
+            self.cpu.pc.set_valor(endereco_atual)
+
+            # Lê a próxima linha de instrução
             linha = self.ler_linha()
-        
-        self.cpu.memoriaPrincipal.imprimir_memoria()
-        self.cpu.pc.set_valor(0) 
 
+        # Reseta o PC após carregar o programa
+        self.cpu.pc.set_valor(0)
 
-
-    def iniciar_programa(self):
-        pass
+    def iniciar_execucao(self):
+        self.cpu.executar()
 
     def ler_linha(self):
         try:
@@ -48,3 +49,5 @@ class Simulador:
 simulador = Simulador("./.as/add_mov.as")
 
 simulador.carregar_programa()
+#simulador.cpu.memoria_principal.imprimir_memoria()
+simulador.iniciar_execucao()
