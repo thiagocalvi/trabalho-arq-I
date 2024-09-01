@@ -2,9 +2,6 @@
 by: @thiagocalvi
 A principio o codigo do registrador eh isso 
 '''
-
-import struct
-
 class Registrador:
     def __init__(self):
         self.set_valor(0)

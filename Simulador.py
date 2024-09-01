@@ -33,8 +33,10 @@ class Simulador:
             # Lê a próxima linha de instrução
             linha = self.ler_linha()
 
-        # Reseta o PC após carregar o programa
+        # Reseta o PC após carregar o programa e max_pc recebe o valor maximo de pc
+        self.cpu.max_pc = self.cpu.pc.get_valor()
         self.cpu.pc.set_valor(0)
+        self.cpu.rsp.set_valor(self.cpu.max_pc * 4) #inicio da pilha na memoria
 
     def iniciar_execucao(self):
         self.cpu.executar()
@@ -46,7 +48,8 @@ class Simulador:
         except:
             return None
         
-simulador = Simulador("./.as/add_mov.as")
+# simulador = Simulador("./.as/add_mov.as")
+simulador = Simulador("./.as/loop_mem.as")
 
 simulador.carregar_programa()
 simulador.iniciar_execucao()
