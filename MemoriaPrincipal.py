@@ -22,7 +22,12 @@ class MemoriaPrincipal:
         # O dado que era armazenado nesse endereço será sobrescrito
         self.memoria[endereco] = valor
 
-    def imprimir_memoria(self):
-        print("Memória Principal:")
-        for i, valor in enumerate(self.memoria):
-            print(f"Endereço {i}: {valor}")
+    def imprimir_memoria(self, colunas=10):
+        for i in range(0, len(self.memoria), colunas):
+            linha = self.memoria[i:i+colunas]
+            # Formata a linha, tratando diferentes tipos de dados
+            linha_formatada = [
+                f"{dado}" if isinstance(dado, int) else str(dado)
+                for dado in linha
+            ]
+            print(' '.join(linha_formatada))

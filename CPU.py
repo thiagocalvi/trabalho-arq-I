@@ -1,3 +1,8 @@
+'''
+TO DO 
+Fazer um função para imprimir a memoria principal 
+'''
+
 from Registrador import Registrador
 from MemoriaPrincipal import MemoriaPrincipal 
 from Cache import MemoriaCache
@@ -21,10 +26,14 @@ class CPU:
         for i, registrador in enumerate(self.registradores):
             print(f"R{i}: {registrador.get_valor()}")
         
+        print("----------------------------------------")
         print(f"PC: {self.pc.get_valor()}")
         print(f"RSP: {self.rsp.get_valor()}")
         print(f"RA: {self.ra.get_valor()}")
-        print(f"Overflow: {self.of}")
+        print(f"Overflow: {self.of.get_valor()}")
+        print("----------------------------------------")
+        print("Memória principal")
+        self.memoria_principal.imprimir_memoria()    
 
         
         print("********************************************************************************************\n")
@@ -75,7 +84,7 @@ class CPU:
         for _ in range(1024):
             endereco_instrucao = self.pc.get_valor()
             
-            if endereco_instrucao == self.max_pc:
+            if endereco_instrucao >= self.max_pc:
                 print("FIM DA EXECUÇÃO")
                 return
             
@@ -157,8 +166,10 @@ class CPU:
                 case "movi":
                     self.movi(parametros[0], parametros[1])
                     
-            self.pc.set_valor(endereco_instrucao + 1)
+            self.pc.set_valor(self.pc.get_valor() + 1)
             self.imprimir_registradores()
+            #self.imprimir_memoria()
+            self.of.set_valor(0)
 
     #Operações aritméticas    
     def add(self, rd, rs, rt):
@@ -264,7 +275,7 @@ class CPU:
 
     def blt(self, rs, rt, rd):
         if self.registradores[rs].get_valor() < self.registradores[rt].get_valor():
-            self.pc.set_valor(self.registradores[rd].get_valor())
+            self.pc.set_valor(self.pc.get_valor() + (rd-1))
 
     def bgt(self, rs, rt, rd):
         if self.registradores[rs].get_valor() > self.registradores[rt].get_valor():
@@ -282,21 +293,9 @@ class CPU:
             self.pc.set_valor(self.registradores[rd].set_valor())             
 
     def jal(self, imediato):
-        self.ra.set_valor(self.pc.get_valor())
-        #---------------------------------------------------------
-        #Não sei se isso esta certo!
-        self.memoria_principal.escrever(self.rsp.get_valor(), self.ra.get_valor())
-        self.rsp.set_valor(self.rsp.get_valor() + 1)
-        #---------------------------------------------------------
-
         self.pc.set_valor(imediato - 1)
 
-    def ret(self):
-        #---------------------------------------------------------
-        #Não sei se isso esta certo!
-        self.ra.set_valor(self.memoria_principal.ler(self.rsp.get_valor() - 1))
-        #---------------------------------------------------------
-        
+    def ret(self):        
         self.pc.set_valor(self.ra.get_valor())
                 
     #Operações de memória

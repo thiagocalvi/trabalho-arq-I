@@ -6,7 +6,7 @@ from CPU import CPU
 class Simulador:
     def __init__(self, arquivo_instrucao) -> None:
         self.arquivo_instrucao = open(arquivo_instrucao, 'r')
-        self.cpu = CPU(1024)
+        self.cpu = CPU(16)
         #Ainda tem mais coisa para colocar aqui!
 
         #Receber aqui tambem a configuração do tamanho de memória entre outra configurações que
@@ -49,7 +49,7 @@ class Simulador:
             return None
         
 # simulador = Simulador("./.as/add_mov.as")
-simulador = Simulador("./.as/loop_mem.as")
+simulador = Simulador("./.as/mem.as")
 
 simulador.carregar_programa()
 simulador.iniciar_execucao()
