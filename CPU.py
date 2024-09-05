@@ -1,21 +1,16 @@
-'''
-TO DO 
-Fazer um função para imprimir a memoria principal 
-'''
-
 from Registrador import Registrador
 from MemoriaPrincipal import MemoriaPrincipal 
 from Cache import MemoriaCache
 
 class CPU:
-    def __init__(self, tam_memoria):
+    def __init__(self, tam_memoria, num_conjuntos, linhas_por_conjunto, tamanho_bloco):
         self.registradores: list = [Registrador() for _ in range(32)]
         self.pc = Registrador()
         self.rsp = Registrador()
         self.ra = Registrador()
         self.memoria_principal = MemoriaPrincipal(tam_memoria)
-        self.cache_instrucao = MemoriaCache(num_conjuntos=64, linhas_por_conjunto=4, tamanho_bloco=16, memoria_principal=self.memoria_principal)
-        self.cache_dados = MemoriaCache(num_conjuntos=64, linhas_por_conjunto=4, tamanho_bloco=16, memoria_principal=self.memoria_principal)
+        self.cache_instrucao = MemoriaCache(num_conjuntos, linhas_por_conjunto, tamanho_bloco, self.memoria_principal)
+        self.cache_dados = MemoriaCache(num_conjuntos, linhas_por_conjunto, tamanho_bloco, self.memoria_principal)
         self.of = Registrador() #Overflow Flag
         self.max_pc = 0 #controlar quando a execução chegou ao fim
 
@@ -89,11 +84,6 @@ class CPU:
                 return
             
             instrucao = self.cache_instrucao.ler(endereco_instrucao)
-            # if instrucao is None:
-            #     instrucao = self.memoria_principal.ler(endereco_instrucao)
-            #     self.cache_instrucao.escrever(endereco_instrucao, instrucao)
-            
-            # Decodificar e executar a instrução
             print("Instrução sendo executada:", instrucao)
             partes = instrucao.split(" ")
             comando = partes[0]
@@ -168,7 +158,6 @@ class CPU:
                     
             self.pc.set_valor(self.pc.get_valor() + 1)
             self.imprimir_registradores()
-            #self.imprimir_memoria()
             self.of.set_valor(0)
 
     #Operações aritméticas    
@@ -260,7 +249,7 @@ class CPU:
         resultado = valor_rs & valor_rt
         self.registradores[rd].set_valor(resultado)
 
-    #Operações de desvios - Implementar o gerenciamento da pilha
+    #Operações de desvios
     def blti(self, rs, rt, imediato):
         if self.registradores[rs].get_valor() < self.registradores[rt].get_valor():
             self.pc.set_valor(imediato - 1)

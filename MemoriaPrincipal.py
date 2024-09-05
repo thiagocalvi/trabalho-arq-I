@@ -22,7 +22,12 @@ class MemoriaPrincipal:
         # O dado que era armazenado nesse endereço será sobrescrito
         self.memoria[endereco] = valor
 
-    def imprimir_memoria(self, colunas=10):
+    def imprimir_memoria(self):
+        if self.tamanho > 256:
+            colunas = 20
+        else:
+            colunas = 10
+
         for i in range(0, len(self.memoria), colunas):
             linha = self.memoria[i:i+colunas]
             # Formata a linha, tratando diferentes tipos de dados
