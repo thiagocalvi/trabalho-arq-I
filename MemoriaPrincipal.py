@@ -23,7 +23,7 @@ class MemoriaPrincipal:
         self.memoria[endereco] = valor
 
     def imprimir_memoria(self):
-        if self.tamanho > 256:
+        if self.tamanho > 128:
             colunas = 20
         else:
             colunas = 10

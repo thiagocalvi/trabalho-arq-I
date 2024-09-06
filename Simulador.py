@@ -1,3 +1,11 @@
+'''
+EXECUTAR ESSE ARQUIVO PARA INICIAR A SIMULAÇÃO
+Dependencias:
+    - Cache.py
+    - CPU.py
+    - MemoriaPrincipal
+    - Registrador.py
+'''
 from CPU import CPU
 
 class Configuracao:
@@ -78,8 +86,7 @@ class Simulador:
         except:
             return None
         
-# simulador = Simulador("./.as/add_mov.as")
-simulador = Simulador("./.as/soma_n.as")
-
+file_path = input("Informe o nome/caminho do arquivo de opereções .as: ")
+simulador = Simulador(file_path)
 simulador.carregar_programa()
 simulador.iniciar_execucao()
