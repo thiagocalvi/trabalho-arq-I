@@ -1,0 +1,1 @@
+Trabalho da disciplina de Arquitetura e Organização de Computadores. Implementação de um simples simulador de arquiterura computacional
